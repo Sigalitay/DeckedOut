@@ -15,7 +15,7 @@ public class Driver extends JComponent implements KeyListener, MouseListener, Mo
     static final int HEIGHT = 600;
 
     //Background
-    Background bg = new Background(WIDTH * 2, HEIGHT * 2);
+    static Scenes scene = new Scenes(WIDTH * 2, HEIGHT * 2);
 
     //Objects
     Player player;
@@ -39,7 +39,7 @@ public class Driver extends JComponent implements KeyListener, MouseListener, Mo
         gui.addMouseListener(this); //stating that this object will listen to the Mouse
         gui.addMouseMotionListener(this); //stating that this object will acknowledge when the Mouse moves
 
-        Sprite.bg = bg;
+        Sprite.bg = scene;
         player = new Player();
 
     }
@@ -60,6 +60,10 @@ public class Driver extends JComponent implements KeyListener, MouseListener, Mo
             player.reset();
         if (key == 70)
             player.interact();
+        if(key == 45)//dec health
+            player.decreaseHealth();
+        if(key == 61)//dec health
+            player.increaseHealth();
     }
 
     public void keyReleased(KeyEvent e) {
@@ -73,13 +77,15 @@ public class Driver extends JComponent implements KeyListener, MouseListener, Mo
     //All your UI drawing goes in here
     public void paintComponent(Graphics g) {
         g.drawLine(0, Driver.HEIGHT / 2, Driver.WIDTH, Driver.HEIGHT / 2);
-        bg.drawSelf(g);
+        scene.drawSelf(g);
 
-        for (BackgroundSprite box : bg.backgrounds.get(bg.currScreen)) {
+        for (BackgroundSprite box : scene.backgrounds.get(scene.currScreen)) {
             box.drawSelf(g);
         }
-        for (NPC npc : bg.npcs.get(bg.currScreen)) {
-            npc.drawSelf(g);
+        if(scene.npcs.get(scene.currScreen) != null) {
+            for (NPC npc : scene.npcs.get(scene.currScreen)) {
+                npc.drawSelf(g);
+            }
         }
 
         player.drawSelf(g);
@@ -90,9 +96,12 @@ public class Driver extends JComponent implements KeyListener, MouseListener, Mo
     }
 
     public void loop() {
-        player.update();
-        for (NPC npc : bg.npcs.get(bg.currScreen)) {
-            npc.update();
+        if(player.movementAllowed)
+            player.update();
+        if(scene.npcs.get(scene.currScreen) != null) {
+            for (NPC npc : scene.npcs.get(scene.currScreen)) {
+                npc.update();
+            }
         }
         repaint();
     }

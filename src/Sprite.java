@@ -2,6 +2,7 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class Sprite {
+    static boolean movementAllowed = true;
     protected int x, y;
     protected int velX, velY, gravity = 5;
     protected final int vel = 5;
@@ -16,7 +17,7 @@ public class Sprite {
 
     protected boolean ableUp, ableDown, ableRight, ableLeft;
 
-    static Background bg;
+    static Scenes bg;
     //hitbox
     Rectangle hitbox;
 
@@ -28,6 +29,7 @@ public class Sprite {
         hitbox = new Rectangle(this.x, this.y, diam, diam);
 
     }
+
     public void drawSelf(Graphics g) {
         //Graphics2D g2d = (Graphics2D) g;
         g.setColor(Color.BLACK);//testing the hitbox

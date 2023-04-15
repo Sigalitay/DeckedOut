@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 
-public class Background {
+public class Scenes {
     int height;
     int width;
     int x, y;
@@ -17,7 +17,7 @@ public class Background {
     int currScreen = 0;
 
 
-    public Background(int width, int height) {
+    public Scenes(int width, int height) {
         this.height = height;
         this.width = width;
         x = 0;
@@ -71,8 +71,10 @@ public class Background {
         for (BackgroundSprite curr : backgrounds.get(currScreen)) {
             curr.updateHori(-velX);
         }
-        for (NPC curr : npcs.get(currScreen)) {
-            curr.updateHori(-velX);
+        if(npcs.get(currScreen) != null) {
+            for (NPC curr : npcs.get(currScreen)) {
+                curr.updateHori(-velX);
+            }
         }
     }
 
@@ -106,12 +108,14 @@ public class Background {
 
         maps.put(0, icon);
         ArrayList<NPC> npc = new ArrayList<>();
-        npc.add(new NPC(Driver.WIDTH / 2 - 200, Driver.HEIGHT - 150));
+        npc.add(new Villager(Driver.WIDTH / 2 - 200, Driver.HEIGHT - 150, 0));
         npcs.put(0, npc);
 
 
         boxes = new ArrayList<>();
         boxes.add(new Section(0, Driver.HEIGHT - 100, Driver.WIDTH * 2, icon1));
+
+        icon = new ImageIcon(Objects.requireNonNull(Driver.class.getResource("Images/Shop Test.jpg")));
 
         backgrounds.put(1, boxes);
         maps.put(1, icon);

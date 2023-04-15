@@ -5,6 +5,8 @@ import java.util.ArrayList;
 
 public class Player extends Sprite {
 
+
+    private HealthBar health = new HealthBar(100, 20);
     private Inventory inv = new Inventory();
 
     public Player() {
@@ -13,6 +15,24 @@ public class Player extends Sprite {
         heightLimit = 100;
     }
 
+    public void drawSelf(Graphics g) {
+        //Graphics2D g2d = (Graphics2D) g;
+        g.setColor(Color.BLACK);//testing the hitbox
+        g.fillRect(x, y, diam, diam);
+        health.drawSelf(g);
+        //g2d.drawImage(characterDown, x, y, diam, diam, null);
+    }
+
+    public void increaseHealth()
+    {
+        if(health.currHealth < health.totalHealth)
+            health.currHealth += 5;
+    }
+    public void decreaseHealth()
+    {
+        if(health.currHealth > 0)
+            health.currHealth -= 5;
+    }
     public void displayInv(Graphics g) {
         inv.drawSelf(g);
     }
@@ -50,16 +70,21 @@ public class Player extends Sprite {
             if (curr instanceof Building build) {
                 if (build.doorway.intersects(hitbox))//player is at the doorway
                 {
-                    bg.currScreen = build.id;
+                    System.out.println("Interacted! id = " + build.id);
+                    Driver.scene.currScreen = build.id;
                     return;
                 }
             }
         }
-        for (NPC curr : bg.npcs.get(bg.currScreen)) {
-            if (curr.hitbox.intersects(hitbox))//player is at the doorway
-            {
-                System.out.println("Interacted!");
-                return;
+        if(Driver.scene.npcs.get(Driver.scene.currScreen) != null) {
+            for (NPC curr : bg.npcs.get(bg.currScreen)) {
+                if (curr.hitbox.intersects(hitbox))//player is at the doorway
+                {
+                    System.out.println("Interacted!");
+                    curr.interact();
+
+                    return;
+                }
             }
         }
     }
