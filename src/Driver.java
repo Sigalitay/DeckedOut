@@ -1,18 +1,18 @@
 
-import java.awt.Dimension;
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.io.IOException;
 import javax.swing.*;
 
 public class Driver extends JComponent implements KeyListener, MouseListener, MouseMotionListener {
 
     //instance variables
-    static final int WIDTH = 900;
-    static final int HEIGHT = 600;
+    static final int WIDTH = 1080;
+    static final int HEIGHT = 800;
 
     //Background
     static Scenes scene = new Scenes(WIDTH * 2, HEIGHT * 2);
@@ -84,7 +84,13 @@ public class Driver extends JComponent implements KeyListener, MouseListener, Mo
         }
         if(scene.npcs.get(scene.currScreen) != null) {
             for (NPC npc : scene.npcs.get(scene.currScreen)) {
-                npc.drawSelf(g);
+                try {
+                    npc.drawSelf(g);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                } catch (FontFormatException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
 

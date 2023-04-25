@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Sprite {
@@ -30,7 +31,7 @@ public class Sprite {
 
     }
 
-    public void drawSelf(Graphics g) {
+    public void drawSelf(Graphics g) throws IOException, FontFormatException {
         //Graphics2D g2d = (Graphics2D) g;
         g.setColor(Color.BLACK);//testing the hitbox
         g.fillRect(x, y, diam, diam);
