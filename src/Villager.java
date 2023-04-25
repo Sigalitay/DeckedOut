@@ -1,15 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
-import java.util.concurrent.*;
 
 
 public class Villager extends NPC{
@@ -22,11 +17,11 @@ public class Villager extends NPC{
     public Villager(int x, int y, int id)
     {
         super(x, y, id);
-        initalize();
+        initialize();
         letterByLetter = new StringUtility(idMap.get(id).get(1), 200);
     }
 
-    public void initalize()
+    public void initialize()
     {
         //0
         idMap.put(0, new ArrayList<>());
@@ -47,6 +42,7 @@ public class Villager extends NPC{
         if(interaction)
         {
             InputStream stream = ClassLoader.getSystemClassLoader().getResourceAsStream("prstart.ttf");
+            assert stream != null;
             Font customFont = Font.createFont(Font.TRUETYPE_FONT, stream).deriveFont(48f);
 
             g.setColor(Color.lightGray);//making a box for the text
