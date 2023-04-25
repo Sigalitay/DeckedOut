@@ -23,15 +23,17 @@ public class Player extends Sprite {
         //g2d.drawImage(characterDown, x, y, diam, diam, null);
     }
 
-    public void increaseHealth()
+    public void increaseHealth(int inc)
     {
-        if(health.currHealth < health.totalHealth)
-            health.currHealth += 5;
+        if(health.currHealth + inc < health.totalHealth)
+            health.currHealth += inc;
+        else
+            health.currHealth = health.totalHealth;
     }
-    public void decreaseHealth()
+    public void decreaseHealth(int dmg)
     {
         if(health.currHealth > 0)
-            health.currHealth -= 5;
+            health.currHealth -= dmg;
     }
     public void displayInv(Graphics g) {
         inv.drawSelf(g);
@@ -76,14 +78,36 @@ public class Player extends Sprite {
                 }
             }
         }
-        if(Driver.scene.npcs.get(Driver.scene.currScreen) != null) {
-            for (NPC curr : bg.npcs.get(bg.currScreen)) {
-                if (curr.hitbox.intersects(hitbox))//player is at the doorway
+        if(Driver.scene.sprites.get(Driver.scene.currScreen) != null) {
+            for (Sprite curr : bg.sprites.get(bg.currScreen)) {
+                if (curr.hitbox.intersects(hitbox))//player is at the npc
                 {
-                    System.out.println("Interacted!");
-                    curr.interact();
+                    if(curr instanceof NPC) {
+                        System.out.println("Interacted!");
+                        ((NPC) curr).interact();
+                    }
 
                     return;
+                }
+            }
+        }
+    }
+
+    public void getAttacked(Attack atk)
+    {
+        //keep it basic for now
+        decreaseHealth(atk.damage);
+    }
+
+    public void attackDetector()
+    {
+        if(Driver.scene.sprites.get(Driver.scene.currScreen) != null) {
+            for (Sprite curr : bg.sprites.get(bg.currScreen)) {
+                if (curr.hitbox.intersects(hitbox)) {
+                    if (curr instanceof Enemy) {
+                        System.out.println("Attacked!");
+                        getAttacked(((Enemy) curr).getAttack());
+                    }
                 }
             }
         }
@@ -100,6 +124,7 @@ public class Player extends Sprite {
             if (curr instanceof Box)
                 boxes.add((Box) curr);
         }
+
         int currGround = objectUpdates(boxes);
 
         //updates players vertical
@@ -123,6 +148,8 @@ public class Player extends Sprite {
         //final update
         hitbox.x = x;
         hitbox.y = y;
+
+        attackDetector();
     }//finally done with update for now...:weary: 9/23/22 7:37
     //lol u thought. working on background movement now
     //YES I DID THE BACKGROUND CODE TOO NOW 10/16/22 12:07 pm

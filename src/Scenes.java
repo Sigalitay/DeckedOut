@@ -13,7 +13,7 @@ public class Scenes {
     int x, y;
     HashMap<Integer, ArrayList<BackgroundSprite>> backgrounds = new HashMap<>();
     HashMap<Integer, ImageIcon> maps = new HashMap<>();
-    HashMap<Integer, ArrayList<NPC>> npcs = new HashMap<>();
+    HashMap<Integer, ArrayList<Sprite>> sprites = new HashMap<>();
     int currScreen = 0;
 
 
@@ -49,7 +49,7 @@ public class Scenes {
         for (BackgroundSprite curr : backgrounds.get(currScreen)) {
             curr.updateVert(-velY);
         }
-        for (NPC curr : npcs.get(currScreen)) {
+        for (Sprite curr : sprites.get(currScreen)) {
             curr.updateVert(-velY);
         }
     }
@@ -71,8 +71,8 @@ public class Scenes {
         for (BackgroundSprite curr : backgrounds.get(currScreen)) {
             curr.updateHori(-velX);
         }
-        if(npcs.get(currScreen) != null) {
-            for (NPC curr : npcs.get(currScreen)) {
+        if(sprites.get(currScreen) != null) {
+            for (Sprite curr : sprites.get(currScreen)) {
                 curr.updateHori(-velX);
             }
         }
@@ -107,9 +107,10 @@ public class Scenes {
         ImageIcon icon = new ImageIcon(Objects.requireNonNull(Driver.class.getResource("Images/TestingBg.png")));
 
         maps.put(0, icon);
-        ArrayList<NPC> npc = new ArrayList<>();
-        npc.add(new Villager(Driver.WIDTH / 2 - 200, Driver.HEIGHT - 150, 0));
-        npcs.put(0, npc);
+        ArrayList<Sprite> spriteArrayList = new ArrayList<>();
+        spriteArrayList.add(new Villager(Driver.WIDTH / 2 - 200, Driver.HEIGHT - 150, 0));
+        spriteArrayList.add(new Enemy(Driver.WIDTH / 2 - 300, Driver.HEIGHT - 150, 1));
+        sprites.put(0, spriteArrayList);
 
 
         boxes = new ArrayList<>();
