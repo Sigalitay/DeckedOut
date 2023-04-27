@@ -1,19 +1,19 @@
 
-import java.awt.Dimension;
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.io.IOException;
 import javax.swing.*;
 
 public class Driver extends JComponent implements KeyListener, MouseListener, MouseMotionListener {
 
     //instance variables
-    static final int WIDTH = 900;
-    static final int HEIGHT = 600;
-
+    static final int WIDTH = 1080;
+    static final int HEIGHT = 800;
+    int scale =  1;
     //Background
     static Scenes scene = new Scenes(WIDTH * 2, HEIGHT * 2);
 
@@ -61,9 +61,9 @@ public class Driver extends JComponent implements KeyListener, MouseListener, Mo
         if (key == 70)
             player.interact();
         if(key == 45)//dec health
-            player.decreaseHealth();
+            player.decreaseHealth(20);
         if(key == 61)//dec health
-            player.increaseHealth();
+            player.increaseHealth(20);
     }
 
     public void keyReleased(KeyEvent e) {
@@ -82,9 +82,13 @@ public class Driver extends JComponent implements KeyListener, MouseListener, Mo
         for (BackgroundSprite box : scene.backgrounds.get(scene.currScreen)) {
             box.drawSelf(g);
         }
-        if(scene.npcs.get(scene.currScreen) != null) {
-            for (NPC npc : scene.npcs.get(scene.currScreen)) {
-                npc.drawSelf(g);
+        if(scene.sprites.get(scene.currScreen) != null) {
+            for (Sprite sprite : scene.sprites.get(scene.currScreen)) {
+                try {
+                    sprite.drawSelf(g);
+                } catch (IOException | FontFormatException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
 
@@ -98,9 +102,9 @@ public class Driver extends JComponent implements KeyListener, MouseListener, Mo
     public void loop() {
         if(player.movementAllowed)
             player.update();
-        if(scene.npcs.get(scene.currScreen) != null) {
-            for (NPC npc : scene.npcs.get(scene.currScreen)) {
-                npc.update();
+        if(scene.sprites.get(scene.currScreen) != null) {
+            for (Sprite sprite : scene.sprites.get(scene.currScreen)) {
+                sprite.update();
             }
         }
         repaint();

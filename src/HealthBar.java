@@ -5,6 +5,7 @@ import java.util.Objects;
 public class HealthBar {
     int currHealth;
     int totalHealth;
+
     public HealthBar(int health)
     {
          currHealth = health;
