@@ -1,9 +1,9 @@
 public class Attack {
     int damage;
-    int cooldown;//ms
+    Cooldown cooldown;//ms
     String name = "Basic";
 
-    public Attack(int dmg, int cd)
+    public Attack(int dmg, Cooldown cd)
     {
         damage = dmg;
         cooldown = cd;

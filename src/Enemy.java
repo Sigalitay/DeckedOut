@@ -14,7 +14,7 @@ public class Enemy extends Sprite{
         this.id = id;
 
         //in the future use the id to match the attack but for now basic attack
-        attack = new Attack(20, 200);
+        attack = new Attack(20, new Cooldown(500));
     }
 
     public Attack getAttack(){

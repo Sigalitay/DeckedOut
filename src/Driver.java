@@ -64,6 +64,12 @@ public class Driver extends JComponent implements KeyListener, MouseListener, Mo
             player.decreaseHealth(20);
         if(key == 61)//dec health
             player.increaseHealth(20);
+
+        //arrows
+        //38 = up
+        //37 = left
+        //40 = down
+        //39 = right
     }
 
     public void keyReleased(KeyEvent e) {

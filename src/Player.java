@@ -105,8 +105,12 @@ public class Player extends Sprite {
             for (Sprite curr : bg.sprites.get(bg.currScreen)) {
                 if (curr.hitbox.intersects(hitbox)) {
                     if (curr instanceof Enemy) {
-                        System.out.println("Attacked!");
-                        getAttacked(((Enemy) curr).getAttack());
+                        if(!(((Enemy) curr).getAttack().cooldown.getCoolDownActive()))
+                        {
+                            System.out.println("Attacked");
+                            getAttacked(((Enemy) curr).getAttack());
+                            ((Enemy) curr).getAttack().cooldown.activateCoolDown();
+                        }
                     }
                 }
             }
