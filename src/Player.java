@@ -1,6 +1,8 @@
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Objects;
 //import javax.swing.ImageIcon;
 
 public class Player extends Sprite {
@@ -16,9 +18,10 @@ public class Player extends Sprite {
     }
 
     public void drawSelf(Graphics g) {
-        //Graphics2D g2d = (Graphics2D) g;
-        g.setColor(Color.BLACK);//testing the hitbox
-        g.fillRect(x, y, diam, diam);
+        Graphics2D g2d = (Graphics2D) g;
+        ImageIcon icon = new ImageIcon(Objects.requireNonNull(Driver.class.getResource("Images/" + "PlayerTest.png")));
+        Image image = icon.getImage();
+        g2d.drawImage(image, x,y, diam, diam, null);
         health.drawSelf(g);
         //g2d.drawImage(characterDown, x, y, diam, diam, null);
     }

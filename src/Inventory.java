@@ -1,6 +1,8 @@
+import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class Inventory {
 
@@ -11,12 +13,14 @@ public class Inventory {
 
     //loadout
     Slot[] currLoadout = new Slot[4];
+    int currLoadoutSlot = 0;
     ArrayList<Item> fullInventory = new ArrayList<>();
-    int currRow = 0;
     int currCol = 0;
+    int currRow = 0;
     Slot[][] inv = new Slot[2][5];
 
     public Inventory(){
+        initInv();
         organizeInv();
         addItemToArmory(new Item(""));
     }
@@ -34,68 +38,79 @@ public class Inventory {
         organizeInv();
     }
 
+    public void initInv()//TODO: unhard code all of this. make it based off the inv size width/height
+    {
+        int loadoutY = 100;
+        for(int i = 0; i< 4; i++)
+            currLoadout[i] = new Slot(300,loadoutY+=100,50);
+
+        int x = 700;
+        for(int r = 0; r < inv.length; r++)
+        {
+            int y = 200;
+            for(int c = 0; c < inv[r].length; c++)
+            {
+                inv[r][c] = new Slot(x,y,50);
+                y+=75;
+            }
+            x+=75;
+        }
+    }
+
     public void organizeInv()//initiallize and organize the inv
     {
-        if(currLoadout[0] == null)
-        {
-            for(int i = 0; i< 4; i++)
-                currLoadout[i] = new Slot();
-        }
         int arrayListCurr = 0;
         for(int r = 0; r < inv.length; r++)
         {
             for(int c = 0; c < inv[r].length; c++)
             {
-                if(inv[r][c] == null)
-                    inv[r][c] = new Slot();
                 if(fullInventory.size() > arrayListCurr)
                 {
                     inv[r][c].item = fullInventory.get(arrayListCurr);
                     arrayListCurr++;
                 }
+                else
+                    inv[r][c].item = null;
             }
         }
     }
 
-    public void addToLoadout(int key){
+    public void addToLoadout(){
         Item selectedItem = inv[currRow][currCol].item;
         //TODO: Add click and drag feature to loadout and fluidly move item
-        if(currLoadout[key].item != null)//slot is occupied
-            fullInventory.add(currLoadout[key].item);//put the slotted item back into inventory
+        if(currLoadout[currLoadoutSlot].item != null)//slot is occupied
+            fullInventory.add(currLoadout[currLoadoutSlot].item);//put the slotted item back into inventory
         fullInventory.remove(selectedItem);
-        currLoadout[key].item = selectedItem;
+        currLoadout[currLoadoutSlot].item = selectedItem;
         organizeInv();
     }
 
     public void drawSelf(Graphics g) {
-        //Graphics2D g2d = (Graphics2D) g;
+        Graphics2D g2d = (Graphics2D) g;
         if (currScreen == 0) {//Loadout/Armoury
             g.setColor(Color.LIGHT_GRAY);
             g.fillRect(margin, margin, Driver.WIDTH - margin*2, Driver.HEIGHT - margin*2);
-            //TODO: unhard code this
-            int x = 700;
+            //draw slots
             for(int r = 0; r < inv.length; r++)
-            {
-                int y = 100;
                 for(int c = 0; c < inv[r].length; c++)
-                {
-                    g.setColor(Color.blue);
-                    g.drawOval(x,y,50,50);
-                    if(inv[r][c].item != null)
-                        inv[r][c].item.drawSelf(g, x+15, y+15);
-                    y+=75;
-                }
-                x+=75;
-            }
-        } else if (currScreen == 1) {
-            g.setColor(Color.GRAY);
+                    inv[r][c].drawSelf(g);
+            for(Slot curr : currLoadout)
+                curr.drawSelf(g);
+
+            //highlight curr slot
+            g.setColor(Color.red);
+            g.drawOval(inv[currRow][currCol].x-5,inv[currRow][currCol].y-5, inv[currRow][currCol].diam+10,inv[currRow][currCol].diam+10);
+            g.drawOval(currLoadout[currLoadoutSlot].x-5,currLoadout[currLoadoutSlot].y-5,currLoadout[currLoadoutSlot].diam + 10, currLoadout[currLoadoutSlot].diam +10);
+        } else if (currScreen == 1) {//Player Stats
+            g.setColor(new Color(12, 63, 101));
             g.fillRect(margin, margin, Driver.WIDTH - margin*2, Driver.HEIGHT - margin*2);
+            ImageIcon icon = new ImageIcon(Objects.requireNonNull(Driver.class.getResource("Images/" + "PlayerTest.png")));
+            Image image = icon.getImage();
+            g2d.drawImage(image, 200,250, 250, 250, null);
         } else {
             g.setColor(Color.DARK_GRAY);
             g.fillRect(margin, margin, Driver.WIDTH - margin*2, Driver.HEIGHT - margin*2);
         }
-       // g.fillRect(margin, margin, Driver.WIDTH - margin*2, Driver.HEIGHT - margin*2);
-       //g2d.drawImage(characterDown, x, y, diam, diam, null);
     }
 
     public void navInv(int key) {
@@ -107,28 +122,49 @@ public class Inventory {
 
         if(currScreen == 0)//navigate inv with arrows and enter FOR NOW
         {
-            //TODO: Update inv navigation to click and drag
-            if(key == 38)//up
-            {
-               if(currRow != 0)
-                   currRow--;
-            }
-            else if(key == 40)//down
-            {
-                if(currRow != 5)
-                    currRow++;
-            }
-            if(key == 37)//left
-            {
-                if(currCol != 0)
-                    currCol--;
-            }
-            else if(key == 39)//right
-            {
-                if(currCol != 1)
-                    currCol++;
-            }
+            navScreen1(key);
         }
+
+    }
+
+    public void navScreen1(int key)
+    {
+        //TODO: Update inv navigation to click and drag
+        if(key == 38)//up
+        {
+            if (currCol != 0)
+                currCol--;
+        }
+        else if(key == 40)//down
+        {
+            if(currCol != 5)
+                currCol++;
+        }
+        if(key == 37)//left
+        {
+            if (currRow != 0)
+                currRow--;
+        }
+        else if(key == 39)//right
+        {
+            if(currRow != 1)
+                currRow++;
+        }
+
+        if(key == 49)
+            currLoadoutSlot = 0;
+        else if(key == 50)
+            currLoadoutSlot = 1;
+        else if(key == 51)
+            currLoadoutSlot = 2;
+        else if(key == 52)
+            currLoadoutSlot = 3;
+
+        if(key == 10)//enter
+        {
+            addToLoadout();
+        }
+
     }
 
 }

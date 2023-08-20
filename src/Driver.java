@@ -28,7 +28,7 @@ public class Driver extends JComponent implements KeyListener, MouseListener, Mo
         JFrame gui = new JFrame(); //This makes the gui box
         gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //Makes sure program can close
         gui.setTitle("Decked Out"); //This is the title of the game, you can change it
-        gui.setPreferredSize(new Dimension(WIDTH, HEIGHT + 23)); //Setting the size for gui
+        gui.setPreferredSize(new Dimension(WIDTH, HEIGHT)); //Setting the size for gui
         gui.setResizable(false); //Makes it so the gui cant be resized
         gui.getContentPane().add(this); //Adding this class to the gui
 
@@ -48,7 +48,7 @@ public class Driver extends JComponent implements KeyListener, MouseListener, Mo
     public void keyPressed(KeyEvent e) {
         //getting the key pressed
         int key = e.getKeyCode();
-        //System.out.println(key);
+       // System.out.println(key);
         if (key == 69)
             invOpen = !invOpen;
         if (!invOpen)
